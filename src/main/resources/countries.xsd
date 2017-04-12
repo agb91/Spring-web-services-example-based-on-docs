@@ -5,7 +5,7 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="name" type="xs:string"/>
-                <xs:element name="id" type="xs:string"/>
+                <xs:element name="capital" type="xs:string"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -32,7 +32,7 @@
         <xs:restriction base="xs:string">
         	<xs:enumeration value="NONE"/>
             <xs:enumeration value="GBP"/>
-            <xs:enumeration value="EUR"/>
+            <xs:enumeration value="Euro"/>
             <xs:enumeration value="PLN"/>
         </xs:restriction>
     </xs:simpleType>

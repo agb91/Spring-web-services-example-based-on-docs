@@ -20,36 +20,54 @@ public class CountryEndpoint {
 	@Autowired
 	public CountryEndpoint(CountryRepository countryRepository) {
 		this.countryRepository = countryRepository;
+		putSomeFixture();
 	}
 
 	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "getCountryRequest")
 	@ResponsePayload
 	public GetCountryResponse getCountry(@RequestPayload GetCountryRequest request) {
 		GetCountryResponse response = new GetCountryResponse();
-		if(request.getId()!=null) //id is the preferred way..
+		if(request.getCapital() != null) //for this example capital is the preferred way..
 		{
-			response.setCountry(countryRepository.findCountryById(request.getId()));
+			Country c = new Country();
+			c = Mappers.country( countryRepository.findByCapital( request.getCapital() ) );
+			response.setCountry(c);
 		}
-		
-		if(response.getCountry() == null) //name is the alternative
+		else
 		{
-			if(request.getName()!=null)
+			if (request.getName()!=null)
 			{
-				response.setCountry(countryRepository.findCountryByName(request.getName()));
+				Country c = new Country();
+				c = Mappers.country(countryRepository.findByName( request.getName() ));
+				response.setCountry( c );
 			}
 		}
 		
-		if(response.getCountry() == null) // return a default instead (never a null)
+		//empty answer
+		if(response.getCountry() == null)
 		{
-			Country defaultCoutry = new Country();
-			defaultCoutry.setId("none");
-			defaultCoutry.setName("null country");
-			defaultCoutry.setCapital("none");
-			defaultCoutry.setCurrency(Currency.NONE);
-			defaultCoutry.setPopulation(0);
-			response.setCountry(defaultCoutry);
+			System.err.print("--------------> WE ARE HERE");
+			response.setCountry( new Country() );
 		}
-
 		return response;
+	}
+	
+	private void putSomeFixture()
+	{
+		CountryEntity c1 = new CountryEntity();
+		c1.setCapital("Rome");
+		c1.setName("Italy");
+		c1.setPopulation(60500000);
+		c1.setCurrency( "Euro" );
+		
+		countryRepository.save(c1);
+		
+		CountryEntity c2 = new CountryEntity();
+		c2.setCapital("Madrid");
+		c2.setName("Spain");
+		c2.setPopulation(45500000);
+		c2.setCurrency( "Euro" );
+		
+		countryRepository.save(c2);
 	}
 }

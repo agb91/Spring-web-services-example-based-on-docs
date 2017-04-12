@@ -89,11 +89,30 @@ public class ApplicationIntegrationTests {
     }
     
     @Test
-    public void testResultId() {
+    public void testResultCapital() {
     	WebServiceTemplate ws = new WebServiceTemplate(marshaller);
         GetCountryRequest request = new GetCountryRequest();
-        request.setId("SPA");
+        request.setCapital("Madrid");
      
+    	GetCountryResponse response = (GetCountryResponse) ws
+    			.marshalSendAndReceive("http://localhost:"
+                + port + "/ws",
+    					request,
+    					new SoapActionCallback("http://localhost:"
+    			                + port + "/ws"));
+    	
+        assertEquals( response.getCountry().getCapital() , "Madrid" );
+        assertEquals( response.getCountry().getName() , "Spain" );
+    
+    }
+    
+    @Test
+    public void testResultBoth() {
+    	WebServiceTemplate ws = new WebServiceTemplate(marshaller);
+        GetCountryRequest request = new GetCountryRequest();
+        request.setCapital("Madrid");
+        request.setName("Spain");
+        
     	GetCountryResponse response = (GetCountryResponse) ws
     			.marshalSendAndReceive("http://localhost:"
                 + port + "/ws",
@@ -109,7 +128,7 @@ public class ApplicationIntegrationTests {
     public void testResultKO() {
     	WebServiceTemplate ws = new WebServiceTemplate(marshaller);
         GetCountryRequest request = new GetCountryRequest();
-        request.setId("NS");
+        request.setCapital("NS");
         request.setName("nonsense");
         
     	GetCountryResponse response = (GetCountryResponse) ws
@@ -119,16 +138,16 @@ public class ApplicationIntegrationTests {
     					new SoapActionCallback("http://localhost:"
     			                + port + "/ws"));
     	
-        assertEquals( response.getCountry().getCapital() , "none" );
+        assertEquals( response.getCountry().getCapital() , null );
     
     }
     
     @Test
-    public void testResultBoth() {
+    public void testResultWrongNameButRightCapital() {
     	WebServiceTemplate ws = new WebServiceTemplate(marshaller);
         GetCountryRequest request = new GetCountryRequest();
-        request.setId("Spain");
-        request.setName("SPA");
+        request.setCapital("Rome");
+        request.setName("nonsense");
         
     	GetCountryResponse response = (GetCountryResponse) ws
     			.marshalSendAndReceive("http://localhost:"
@@ -137,9 +156,11 @@ public class ApplicationIntegrationTests {
     					new SoapActionCallback("http://localhost:"
     			                + port + "/ws"));
     	
-        assertEquals( response.getCountry().getCapital() , "none" );
+        assertEquals( response.getCountry().getName() , "Italy" );
     
     }
+    
+    
     
     
 }

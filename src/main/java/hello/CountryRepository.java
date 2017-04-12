@@ -1,73 +1,14 @@
 package hello;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-import mynamespace.Country;
-import mynamespace.Currency;
-import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
+@RepositoryRestResource(collectionResourceRel = "countries", path = "countries")
+public interface CountryRepository extends PagingAndSortingRepository<CountryEntity, Long> {
 
-@Component
-public class CountryRepository {
-	private static final List<Country> countries = new ArrayList<Country>();
-
-	@PostConstruct
-	public void initData() {
-		Country spain = new Country();
-		spain.setId("SPA");
-		spain.setName("Spain");
-		spain.setCapital("Madrid");
-		spain.setCurrency(Currency.EUR);
-		spain.setPopulation(46704314);
-
-		countries.add(spain);
-
-		Country poland = new Country();
-		poland.setId("POL");
-		poland.setName("Poland");
-		poland.setCapital("Warsaw");
-		poland.setCurrency(Currency.PLN);
-		poland.setPopulation(38186860);
-
-		countries.add(poland);
-
-		Country uk = new Country();
-		uk.setId("UK");
-		uk.setName("United Kingdom");
-		uk.setCapital("London");
-		uk.setCurrency(Currency.GBP);
-		uk.setPopulation(63705000);
-
-		countries.add(uk);
-	}
-
-	public Country findCountryByName(String name) {
-		Assert.notNull(name);
-
-		Country result = null;
-
-		for (Country country : countries) {
-			if (name.equals(country.getName())) {
-				result = country;
-			}
-		}
-
-		return result;
-	}
+	CountryEntity findByName(@Param("name") String name);
+	CountryEntity findByCapital(@Param("name") String capital);
+	CountryEntity findById(@Param("name") long id);
 	
-	public Country findCountryById(String id) {
-		Assert.notNull(id);
-
-		Country result = null;
-
-		for (Country country : countries) {
-			if (id.equals(country.getId() )) {
-				result = country;
-			}
-		}
-
-		return result;
-	}
 }
