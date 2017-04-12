@@ -15,11 +15,11 @@ import mynamespace.GetCountryResponse;
 public class CountryEndpoint {
 	private static final String NAMESPACE_URI = "myNameSpace";
 
-	private CountryRepository countryRepository;
+	private CountryService countryService;
 
 	@Autowired
-	public CountryEndpoint(CountryRepository countryRepository) {
-		this.countryRepository = countryRepository;
+	public CountryEndpoint(CountryService countryService) {
+		this.countryService = countryService;
 		putSomeFixture();
 	}
 
@@ -30,7 +30,7 @@ public class CountryEndpoint {
 		if(request.getCapital() != null) //for this example capital is the preferred way..
 		{
 			Country c = new Country();
-			c = Mappers.country( countryRepository.findByCapital( request.getCapital() ) );
+			c = Mappers.country( countryService.findByCapital( request.getCapital() ) );
 			response.setCountry(c);
 		}
 		else
@@ -38,7 +38,7 @@ public class CountryEndpoint {
 			if (request.getName()!=null)
 			{
 				Country c = new Country();
-				c = Mappers.country(countryRepository.findByName( request.getName() ));
+				c = Mappers.country(countryService.findByName( request.getName() ));
 				response.setCountry( c );
 			}
 		}
@@ -60,7 +60,7 @@ public class CountryEndpoint {
 		c1.setPopulation(60500000);
 		c1.setCurrency( "Euro" );
 		
-		countryRepository.save(c1);
+		countryService.saveCountry(c1);
 		
 		CountryEntity c2 = new CountryEntity();
 		c2.setCapital("Madrid");
@@ -68,6 +68,11 @@ public class CountryEndpoint {
 		c2.setPopulation(45500000);
 		c2.setCurrency( "Euro" );
 		
-		countryRepository.save(c2);
+		countryService.saveCountry(c2);
+	}
+	
+	private void putOneFixture(CountryEntity c)
+	{
+		countryService.saveCountry(c);
 	}
 }

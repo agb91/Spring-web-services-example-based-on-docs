@@ -47,6 +47,7 @@ public class ApplicationIntegrationTests {
     public void init() throws Exception {
         marshaller.setPackagesToScan(ClassUtils.getPackageName(GetCountryRequest.class));
         marshaller.afterPropertiesSet();
+        
     }
     
     @Test
@@ -160,7 +161,5 @@ public class ApplicationIntegrationTests {
     
     }
     
-    
-    
-    
+       
 }
